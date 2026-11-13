@@ -1,0 +1,41 @@
+# ==============================================================================
+# Finding #1 (🔴 القسم 4.11): الـ .gitignore الأصلي كان بيستبعد appsettings.Development.json
+# (اللي مفيهوش أي سر أصلاً) بينما appsettings.json (اللي كان فيه مفتاح الـ JWT صراحة)
+# كان بيترفع لمستودع الكود عاديًا. دلوقتي appsettings.json نفسه بقى آمن للرفع لأنه
+# بقى فاضي من أي سر حقيقي (شوف appsettings.json - قيمة Jwt:Key فاضية عمدًا)، لكن أي
+# ملف إعدادات محلي شخصي فيه قيم حقيقية (لو حد فضّل ينشئه بدل user-secrets) لازم يتستبعد.
+# ==============================================================================
+
+# ملفات إعدادات محلية شخصية قد تحتوي أسرار حقيقية (لو استُخدمت بدل dotnet user-secrets)
+appsettings.*.local.json
+appsettings.Local.json
+*.local.json
+
+# بناء .NET
+bin/
+obj/
+out/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# قواعد بيانات محلية
+*.mdf
+*.ldf
+
+# لوجات
+*.log
+
+# نظام التشغيل
+.DS_Store
+Thumbs.db
+
+.env
+.env.*
+!.env.example
+secrets.json
+*.pfx
+*.p12
+*.bak
