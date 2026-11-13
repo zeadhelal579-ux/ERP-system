@@ -2,11 +2,9 @@ import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { ApiResponse } from './types/api';
 
-// كل الـ Controllers الحقيقية معمول عليها [Route("api/v1/[controller]")] --
-// لازم الـ base URL يشمل "/api/v1" وإلا كل طلب هيرجع 404.
-// القيمة الاحتياطية للتطوير المحلي بس -- build الـ production بيفشل لو المتغير ناقص
-// (راجع vite.config.ts)، فمفيش احتمال تتسرّب localhost لنسخة منشورة.
-const baseURL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5182/api/v1';
+// An explicit API URL enables live mode. The public sample runs entirely in the browser.
+const baseURL = import.meta.env.VITE_API_BASE_URL?.trim();
+export const isDemoMode = !baseURL;
 
 // التوكن في الذاكرة فقط، مش localStorage (تقليلًا لخطر XSS). الأثر الجانبي:
 // تحديث الصفحة (F5) يسجّل خروج المستخدم لحد ما يُضاف httpOnly Cookie من الباك.
@@ -20,7 +18,10 @@ export function registerUnauthorizedHandler(handler: (() => void) | null) {
   onUnauthorized = handler;
 }
 
-export const apiClient = axios.create({ baseURL });
+export const apiClient = axios.create({
+  baseURL,
+  adapter: isDemoMode ? async (config) => (await import('@/demo/demo-adapter')).demoAdapter(config) : undefined,
+});
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if (inMemoryToken) {

@@ -15,7 +15,9 @@ export function RecallBatchCard({ batch, canHold }: Props): ReactElement {
   const hold = useMutation({
     mutationFn: () => setBatchHold(batch.id, !batch.isHeld, reason.trim()),
     onSuccess: async () => {
-      await cache.invalidateQueries({ queryKey: ['recall'] });
+      await Promise.all(['recall', 'pallets', 'packable-batches', 'shipping'].map(
+        (key) => cache.invalidateQueries({ queryKey: [key] })
+      ));
       setReason('');
     },
   });

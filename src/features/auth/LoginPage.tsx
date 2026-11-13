@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { isDemoMode } from '@/lib/api-client';
 import { FormField } from '@/components/FormField';
 
 export function LoginPage() {
@@ -16,8 +17,8 @@ export function LoginPage() {
     return <Navigate to="/" replace />;
   }
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
+  async function handleSubmit(e?: FormEvent) {
+    e?.preventDefault();
     setError(null);
     try {
       await login(username, password);
@@ -37,10 +38,19 @@ export function LoginPage() {
               MES
             </div>
             <h1 className="text-lg font-semibold text-gray-900">Production Management System</h1>
-            <p className="mt-1 text-sm text-gray-500">Sign in to continue</p>
+            <p className="mt-1 text-sm text-gray-500">{isDemoMode ? 'Beverage manufacturing demo' : 'Sign in to continue'}</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {isDemoMode ? (
+            <div className="space-y-3">
+              <p className="text-sm text-gray-600">Explore a sample beverage plant. Quality holds are simulated, and other records are read-only.</p>
+              {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
+              <button type="button" disabled={isLoading} onClick={() => void handleSubmit()}
+                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brand-600 text-sm font-medium text-white">
+                {isLoading ? 'Opening…' : 'Enter sample plant'} <ArrowRight size={16} />
+              </button>
+            </div>
+          ) : <form onSubmit={handleSubmit} className="space-y-4">
             <FormField
               label="Username"
               placeholder="Enter your username"
@@ -79,7 +89,7 @@ export function LoginPage() {
               {isLoading ? 'Signing in...' : 'Sign In'}
               {!isLoading && <ArrowRight size={16} />}
             </button>
-          </form>
+          </form>}
         </div>
       </div>
     </div>

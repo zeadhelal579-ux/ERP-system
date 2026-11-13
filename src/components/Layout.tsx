@@ -12,6 +12,7 @@ import {
   Truck,
   type LucideIcon,
 } from 'lucide-react';
+import { isDemoMode } from '@/lib/api-client';
 import { useAuth } from '@/hooks/useAuth';
 import type { UserRole } from '@/lib/types/api';
 
@@ -115,6 +116,9 @@ export function AppLayout() {
 
       <main className="min-w-0 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-6xl px-6 py-6">
+          {isDemoMode && <p className="mb-4 rounded-md border border-brand-200 bg-brand-50 p-3 text-sm text-brand-800">
+            Sample plant · Synthetic records · Quality holds reset when you reload.
+          </p>}
           <Outlet />
         </div>
       </main>

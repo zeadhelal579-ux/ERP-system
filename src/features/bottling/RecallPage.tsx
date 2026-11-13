@@ -1,6 +1,7 @@
 // Traces a material lot to affected batches, pallets and customers.
 import { useState, type FormEvent, type ReactElement } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { isDemoMode } from '@/lib/api-client';
 import { FormField } from '@/components/FormField';
 import { usePermissions } from '@/hooks/usePermissions';
 import { getRecall } from './api';
@@ -38,6 +39,8 @@ export function RecallPage(): ReactElement {
           {recall.isFetching ? 'Searching…' : 'Trace lot'}
         </button>
       </form>
+      {isDemoMode && <p className="text-sm text-gray-600">Try <button type="button" className="font-mono underline"
+        onClick={() => { setBarcode('CAPS-DEMO'); setLotCode('CAPS-DEMO'); }}>CAPS-DEMO</button> for a lot tied to shipped and held pallets.</p>}
       {recall.error && <p role="alert" className="text-red-700">{recall.error.message}</p>}
       {recall.data && !recall.error && (
         <>

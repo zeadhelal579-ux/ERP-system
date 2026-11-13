@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { isDemoMode } from '@/lib/api-client';
 import { useAuth } from '@/hooks/useAuth';
 import type { UserRole } from '@/lib/types/api';
 import { AppLayout } from '@/components/Layout';
@@ -37,7 +38,7 @@ const ROLE_HOME: Record<UserRole, string> = {
   LabTech: '/lab',
   QualityManager: '/approvals',
   GeneralManager: '/overview',
-  SuperAdmin: '/inventory',
+  SuperAdmin: isDemoMode ? '/overview' : '/inventory',
 };
 
 function HomeRedirect() {
