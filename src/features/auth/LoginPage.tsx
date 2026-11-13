@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { isDemoMode } from '@/lib/api-client';
+import { demoRoles } from '@/demo/roles';
 import { FormField } from '@/components/FormField';
 
 export function LoginPage() {
@@ -17,11 +18,11 @@ export function LoginPage() {
     return <Navigate to="/" replace />;
   }
 
-  async function handleSubmit(e?: FormEvent) {
+  async function handleSubmit(e?: FormEvent, demoRole?: string) {
     e?.preventDefault();
     setError(null);
     try {
-      await login(username, password);
+      await login(demoRole ?? username, password);
       navigate('/', { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invalid username or password');
@@ -45,10 +46,15 @@ export function LoginPage() {
             <div className="space-y-3">
               <p className="text-sm text-gray-600">Explore a sample beverage plant. Quality holds are simulated, and other records are read-only.</p>
               {error && <p role="alert" className="text-sm text-red-700">{error}</p>}
-              <button type="button" disabled={isLoading} onClick={() => void handleSubmit()}
-                className="flex min-h-11 w-full items-center justify-center gap-2 rounded-md bg-brand-600 text-sm font-medium text-white">
-                {isLoading ? 'Opening…' : 'Enter sample plant'} <ArrowRight size={16} />
-              </button>
+              <div className="grid gap-2" aria-label="Demo roles">
+                {Object.entries(demoRoles).map(([role, label]) => (
+                  <button key={role} type="button" disabled={isLoading}
+                    onClick={() => void handleSubmit(undefined, role)}
+                    className="flex min-h-11 items-center justify-between rounded-md border border-gray-200 px-3 text-sm font-medium text-gray-800 hover:border-brand-600 hover:bg-brand-50">
+                    {label} <ArrowRight size={16} aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
             </div>
           ) : <form onSubmit={handleSubmit} className="space-y-4">
             <FormField

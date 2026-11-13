@@ -2,6 +2,7 @@
 import { AxiosError, type AxiosAdapter, type InternalAxiosRequestConfig } from 'axios';
 import type { DashboardStats, LoginResponse, PagedResult, Traceability } from '@/lib/types/api';
 import type { RecallReport } from '@/features/bottling/api';
+import { demoRoles, isDemoRole } from './roles';
 import { batches, materials, pallets, products, scrap, shipments } from './fixtures';
 
 function page<T>(items: T[], params: URLSearchParams): PagedResult<T> {
@@ -106,9 +107,14 @@ export const demoAdapter: AxiosAdapter = async (config) => {
   let data: unknown;
 
   if (path === '/auth/login' && method === 'post') {
-    data = { token: 'demo-session', fullName: 'Demo Operator', role: 'SuperAdmin',
+    const role: unknown = JSON.parse(typeof config.data === 'string' ? config.data : '{}').username;
+    if (!isDemoRole(role)) failure(config, 400, 'DEMO_ROLE_REQUIRED', 'Choose a demo role.');
+    data = { token: role, fullName: demoRoles[role], role,
       expiresAt: new Date(Date.now() + 3_600_000).toISOString() } satisfies LoginResponse;
   } else if (method === 'put' && /^\/bottling\/batches\/\d+\/hold$/.test(path)) {
+    const role = String(config.headers.get('Authorization') ?? '').replace(/^Bearer /, '');
+    if (role !== 'QualityManager' && role !== 'SuperAdmin')
+      failure(config, 403, 'DEMO_FORBIDDEN', 'Quality holds require a quality manager.');
     const id = Number(path.split('/')[3]);
     const batch = batches.find((entry) => entry.id === id);
     const input: unknown = JSON.parse(typeof config.data === 'string' ? config.data : '{}');
