@@ -1,0 +1,72 @@
+PASS POST auth/login [200]
+PASS POST auth/register [200]
+PASS POST auth/login [200]
+PASS POST auth/register [200]
+PASS POST auth/login [200]
+PASS POST auth/register [200]
+PASS POST auth/login [200]
+PASS POST auth/register [200]
+PASS POST auth/login [200]
+PASS GET bottling/products [401]
+PASS GET bottling/products [403]
+PASS GET bottling/products [200]
+PASS Production can read the configured product catalog
+PASS POST store/add-material [200]
+PASS POST store/add-material [200]
+PASS POST store/issue-material [400]
+PASS POST lab/submit-result [200]
+PASS POST lab/submit-result [200]
+PASS POST store/issue-material [200]
+PASS POST store/issue-material [200]
+PASS Replayed issue did not deduct stock twice
+PASS POST store/issue-material [200]
+PASS POST production/start-batch [200]
+PASS POST production/start-batch [200]
+PASS Replayed start returned the original batch
+PASS POST production/start-batch [409]
+PASS POST production/finish-batch [200]
+PASS POST lab/submit-result [200]
+PASS POST manager/decision [200]
+PASS POST bottling/batches/1/pallets [200]
+PASS POST bottling/batches/1/pallets [200]
+PASS POST store/issue-material [200]
+PASS POST store/issue-material [200]
+PASS Replayed issue did not deduct stock twice
+PASS POST store/issue-material [200]
+PASS POST production/start-batch [200]
+PASS POST production/start-batch [200]
+PASS Replayed start returned the original batch
+PASS POST production/start-batch [409]
+PASS POST production/finish-batch [200]
+PASS POST lab/submit-result [200]
+PASS POST manager/decision [200]
+PASS POST bottling/batches/2/pallets [200]
+PASS POST bottling/batches/2/pallets [200]
+PASS POST bottling/dispatch [403]
+PASS POST bottling/dispatch [200]
+PASS POST bottling/dispatch [200]
+PASS PUT bottling/batches/1/hold [403]
+PASS PUT bottling/batches/1/hold [200]
+PASS POST bottling/dispatch [409]
+PASS GET bottling/recall?lotCode=LOT-7286297238644EAE92D7E5C1BA8887CF [403]
+PASS GET bottling/recall?lotCode=LOT-7286297238644EAE92D7E5C1BA8887CF [200]
+PASS Recall traces both batches and reconciles remaining cap stock
+PASS Recall identifies the two dispatched pallets
+PASS Recall identifies the held pallet and rejected dispatch remained atomic
+PASS Recall identifies the affected customer
+PASS_COUNT=56
+DEMO_LOT=LOT-7286297238644EAE92D7E5C1BA8887CF
+
+> erp-frontend@0.1.0 build
+> tsc -b && vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 1711 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.72 kB │ gzip:   0.40 kB
+dist/assets/index-RmlBuf8L.css   18.36 kB │ gzip:   4.27 kB
+dist/assets/index-BazVqnhc.js   341.46 kB │ gzip: 106.32 kB
+
+✓ built in 872ms

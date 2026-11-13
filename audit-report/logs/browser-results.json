@@ -1,0 +1,16 @@
+[
+  {
+    "name": "source-desktop",
+    "api": "real",
+    "holdRehearsal": "passed",
+    "noHorizontalOverflow": true,
+    "axe": []
+  },
+  {
+    "name": "demo-mobile",
+    "api": "real",
+    "holdRehearsal": "passed",
+    "noHorizontalOverflow": true,
+    "axe": []
+  }
+]
